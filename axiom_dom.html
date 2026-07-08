@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>AXIOM DOM – Struktur/Masse</title>
+
+<style>
+body { background:#000; color:#0f0; font-family:monospace; }
+h1, h2 { color:#6cf; }
+.block { border:1px solid #333; padding:10px; margin:20px 0; }
+pre { background:#000; padding:10px; border:1px solid #333; }
+input { width:80%; padding:6px; background:#111; color:#0f0; border:1px solid #333; }
+button { padding:8px 14px; background:#333; color:#eee; border:1px solid #666; cursor:pointer; }
+button:hover { background:#444; }
+</style>
+</head>
+
+<body>
+
+<h1>AXIOM DOM – Struktur/Masse</h1>
+<p>SEEÜ + 698869 + 4 Stationen + Fläche 48</p>
+
+<!-- MASTER SELECTOR -->
+<h2>Master wählen</h2>
+<button onclick="setMaster('SEEÜ')">SEEÜ</button>
+<button onclick="setMaster('698869')">698869</button>
+<pre id="masterOut">Kein Master gewählt.</pre>
+
+<script>
+let MASTER = null;
+function setMaster(m){
+    MASTER = m;
+    document.getElementById("masterOut").innerText =
+        "MASTER: " + m;
+}
+</script>
+
+<!-- STATIONEN -->
+<h2>HTML‑Stationen</h2>
+<ul>
+  <li>HTML 1 → <a href="https://iki1uc.github.io/Rekursion/" target="_blank">Rekursion</a></li>
+  <li>HTML 2 → <a href="https://iki1uc.github.io/Unendlichkeit/" target="_blank">Unendlichkeit</a></li>
+  <li>HTML 3 → <a href="https://iki1uc.github.io/Quadratur/" target="_blank">Quadratur</a></li>
+  <li>HTML 4 → <a href="https://iki1uc.github.io/Verhaeltnis/" target="_blank">Verhältnis</a></li>
+</ul>
+
+<!-- SCAN -->
+<h2>SCAN‑Eingabe</h2>
+<input id="domInput" type="text" placeholder="Φ + φ² + AX + P4">
+<button onclick="runDOM()">SCAN starten</button>
+
+<!-- STATIONEN OUTPUT -->
+<div class="block"><h3>Station 1 – Rekursion</h3><pre id="s1">Noch keine Eingabe.</pre></div>
+<div class="block"><h3>Station 2 – Unendlichkeit</h3><pre id="s2">Noch keine Eingabe.</pre></div>
+<div class="block"><h3>Station 3 – Quadratur</h3><pre id="s3">Noch keine Eingabe.</pre></div>
+<div class="block"><h3>Station 4 – Verhältnis</h3><pre id="s4">Noch keine Eingabe.</pre></div>
+
+<!-- FLÄCHE 48 -->
+<h2>FLÄCHE 48 – Zwei‑Seiten‑Analyse</h2>
+<div class="block"><h3>Seite A</h3><pre id="fa">Noch keine Eingabe.</pre></div>
+<div class="block"><h3>Seite B</h3><pre id="fb">Noch keine Eingabe.</pre></div>
+
+<script>
+function runDOM() {
+    let f = document.getElementById("domInput").value;
+
+    document.getElementById("s1").innerText = station(f, "Rekursion", 1);
+    document.getElementById("s2").innerText = station(f, "Unendlichkeit", 2);
+    document.getElementById("s3").innerText = station(f, "Quadratur", 3);
+    document.getElementById("s4").innerText = station(f, "Verhältnis", 4);
+
+    document.getElementById("fa").innerText = flaeche(f, "A");
+    document.getElementById("fb").innerText = flaeche(f, "B");
+}
+
+function station(f, name, n) {
+    let pos = (f.length + n) % 12;
+    let mass = f.length * n;
+    let scan = f.length + " Zeichen";
+
+    let konsequenz = "";
+
+    if (f.includes("Φ")) konsequenz += "IKI\n";
+    if (f.includes("φ∞")) konsequenz += "MA³\n";
+    if (f.includes("φ²")) konsequenz += "UC\n";
+    if (f.includes("φ")) konsequenz += "BIR\n";
+
+    if (f.includes("AX")) konsequenz += "AX – Vorwärts\n";
+    if (f.includes("XA")) konsequenz += "XA – Rückwärts\n";
+
+    if (f.includes("P4")) konsequenz += "Start\n";
+    if (f.includes("P2")) konsequenz += "Merge\n";
+
+    return (
+        name + "\n" +
+        "POS = (" + pos + ", φ)\n" +
+        "MASS = " + mass + "\n" +
+        "SCAN = " + scan + "\n" +
+        "Konsequenz:\n" + (konsequenz || "Keine erkannt.")
+    );
+}
+
+function flaeche(f, side) {
+    let pos = (f.length + (side === "A" ? 3 : 7)) % 16;
+    let mass = f.length * (side === "A" ? 2 : 4);
+
+    let konsequenz = "";
+
+    if (f.includes("Φ")) konsequenz += "IKI‑Orbit\n";
+    if (f.includes("φ∞")) konsequenz += "MA³‑Orbit\n";
+    if (f.includes("AX")) konsequenz += "Operator AX\n";
+    if (f.includes("XA")) konsequenz += "Operator XA\n";
+
+    if (f.includes("P4")) konsequenz += "Start\n";
+    if (f.includes("P2")) konsequenz += "Merge\n";
+
+    return (
+        "Fläche " + side + "\n" +
+        "POS = (" + pos + ", φ)\n" +
+        "MASS = " + mass + "\n" +
+        "Konsequenz:\n" + (konsequenz || "Keine erkannt.")
+    );
+}
+</script>
+
+</body>
+</html>
