@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>FLÄCHE‑48 – 6D‑ABLEITUNG</title>
+
+<style>
+body { background:#000; color:#0f0; font-family:monospace; }
+h1, h2 { color:#6cf; }
+.block { border:1px solid #333; padding:10px; margin:20px 0; }
+pre { background:#000; padding:10px; border:1px solid #333; }
+input { width:80%; padding:6px; background:#111; color:#0f0; border:1px solid #333; }
+button { padding:8px 14px; background:#333; color:#eee; border:1px solid #666; cursor:pointer; }
+button:hover { background:#444; }
+</style>
+</head>
+
+<body>
+
+<h1>FLÄCHE‑48 – 6D‑ABLEITUNG</h1>
+<p>Seite A + Seite B → jetzt in 6 Dimensionen.</p>
+
+<h2>SCAN‑Eingabe</h2>
+<input id="f48" type="text" placeholder="Φ + φ∞ + AX + P2">
+<button onclick="run48()">SCAN starten</button>
+
+<!-- ========================= -->
+<!-- SEITE A -->
+<!-- ========================= -->
+
+<div class="block">
+<h3>Seite A – mathematische 6D‑Fläche</h3>
+<pre id="fa">Noch keine Eingabe.</pre>
+</div>
+
+<!-- ========================= -->
+<!-- SEITE B -->
+<!-- ========================= -->
+
+<div class="block">
+<h3>Seite B – logische 6D‑Fläche</h3>
+<pre id="fb">Noch keine Eingabe.</pre>
+</div>
+
+<script>
+// =========================
+// 6D‑SCAN ENGINE
+// =========================
+
+function run48() {
+    let f = document.getElementById("f48").value;
+
+    document.getElementById("fa").innerText = flaeche6D(f, "A");
+    document.getElementById("fb").innerText = flaeche6D(f, "B");
+}
+
+function flaeche6D(f, side) {
+
+    // 3D Raum
+    let X = (f.length % 7);
+    let Y = (f.length % 11);
+    let Z = (f.length % 13);
+
+    // Orbit
+    let O = orbit(f);
+
+    // Operator
+    let OP = operator(f);
+
+    // RUN
+    let RUN = run(f);
+
+    // POS / MASS (Seitenabhängig)
+    let pos = (f.length + (side === "A" ? 3 : 7)) % 16;
+    let mass = f.length * (side === "A" ? 2 : 4);
+
+    return (
+        "Fläche " + side + " – 6D\n" +
+        "\n" +
+        "X = " + X + "\n" +
+        "Y = " + Y + "\n" +
+        "Z = " + Z + "\n" +
+        "Orbit = " + O + "\n" +
+        "Operator = " + OP + "\n" +
+        "RUN = " + RUN + "\n" +
+        "\n" +
+        "POS = (" + pos + ", φ)\n" +
+        "MASS = " + mass + "\n" +
+        "SCAN = " + f.length + " Zeichen\n"
+    );
+}
+
+// =========================
+// Hilfsfunktionen
+// =========================
+
+function orbit(f){
+    if (f.includes("Φ")) return "IKI";
+    if (f.includes("φ∞")) return "MA³";
+    if (f.includes("φ²")) return "UC";
+    if (f.includes("φ")) return "BIR";
+    return "none";
+}
+
+function operator(f){
+    if (f.includes("AX")) return "AX";
+    if (f.includes("XA")) return "XA";
+    return "none";
+}
+
+function run(f){
+    if (f.includes("P4")) return "Start";
+    if (f.includes("P0")) return "Wake";
+    if (f.includes("P1")) return "Melt";
+    if (f.includes("P2")) return "Merge";
+    if (f.includes("Pe")) return "End";
+    return "none";
+}
+</script>
+
+</body>
+</html>
