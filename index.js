@@ -7,3 +7,5 @@ import { ORT } from "./router.js";
   document.getElementById("user-level").innerText = user?.level ?? "-";
   document.getElementById("user-status").innerText = user?.status ?? "unknown";
 })();
+import { runUse } from "./use.md.js";
+document.getElementById("btn-run")?.addEventListener("click", runUse);
