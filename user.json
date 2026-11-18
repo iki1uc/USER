@@ -1,15 +1,42 @@
-import user from "./user.json" with { type: "json" };
+<button id="useButton">User bewegen</button>
+<p id="result"></p>
 
-function move(user) {
-  console.log(`Bewege ${user.name} auf Level ${user.level}`);
-}
+<script type="module">
+  const result = document.querySelector("#result");
 
-function use(user, action) {
-  if (user.status !== "active") {
-    throw new Error("User ist nicht aktiv.");
+  async function loadUser() {
+    // „raw“ liefert den Dateiinhalt statt der GitHub-Seite
+    const response = await fetch(
+      "https://raw.githubusercontent.com/iki1uc/USER/main/user.json"
+    );
+
+    if (!response.ok) {
+      throw new Error(`User-Datei konnte nicht geladen werden: ${response.status}`);
+    }
+
+    // Die Datei enthält JavaScript, daher nicht response.json() verwenden.
+    return import(
+      `data:text/javascript;charset=utf-8,${encodeURIComponent(await response.text())}`
+    );
   }
 
-  return action(user);
-}
+  function move(user) {
+    result.textContent = `Bewege ${user.name} auf Level ${user.level}`;
+  }
 
-use(user, move);
+  function use(user, action) {
+    if (user.status !== "active") {
+      throw new Error("User ist nicht aktiv.");
+    }
+    action(user);
+  }
+
+  document.querySelector("#useButton").addEventListener("click", async () => {
+    try {
+      const { default: user } = await loadUser();
+      use(user, move);
+    } catch (error) {
+      result.textContent = error.message;
+    }
+  });
+</script>
