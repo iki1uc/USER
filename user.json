@@ -1,5 +1,15 @@
-{
-    "name": "Ridvan",
-    "level": 6,
-    "status": "active"
+import user from "./user.json" with { type: "json" };
+
+function move(user) {
+  console.log(`Bewege ${user.name} auf Level ${user.level}`);
 }
+
+function use(user, action) {
+  if (user.status !== "active") {
+    throw new Error("User ist nicht aktiv.");
+  }
+
+  return action(user);
+}
+
+use(user, move);
